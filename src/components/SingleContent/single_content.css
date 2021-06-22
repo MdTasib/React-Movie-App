@@ -9,13 +9,14 @@
   position: relative;
   font-family: "Montserrat", sans-serif;
   transition: all .30s ease;
-  box-shadow: 0px 0px 5px 2px #6589d1;
+  box-shadow: 0px 0px 10px 2px #1e3ce2;
 }
 
 .media:hover {
   background-color: white;
   color: black;
   box-shadow: 0px 0px 5px 2px white;
+  transform: scale(1.03);
 }
 
 @media (max-width: 550px) {
