@@ -6,6 +6,8 @@
 /.pnp
 .pnp.js
 
+/src/pages/Trending/api.js
+
 # testing
 /coverage
 
