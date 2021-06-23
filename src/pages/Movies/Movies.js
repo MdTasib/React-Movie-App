@@ -5,6 +5,7 @@ import api from '../Trending/api';
 import CustomPagination from '../../components/Pagination/CustomPagination';
 import SingleContent from '../../components/SingleContent/SingleContent';
 import Genres from '../../components/Genres/Genres';
+import useGenre from '../../Hooks/useGenre';
 
 const Movies = () => {
     const [page, setPage] = useState(1);
@@ -12,6 +13,7 @@ const Movies = () => {
     const [numOfPages, setNumOfPages] = useState();
     const [genres, setGenres] = useState([]);
     const [selectedGenres, setSelectedGenres] = useState([]);
+    const genreforURL = useGenre(selectedGenres);
 
     let fetchMovies = async () => {
         const { data } = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${api}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=${page}&with_genres=${genreforURL}`);
@@ -23,7 +25,7 @@ const Movies = () => {
     useEffect(() => {
         window.scroll(0, 0);
         fetchMovies();
-    }, [page])
+    }, [page, genreforURL]);
 
     return (
         <div>

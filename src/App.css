@@ -21,10 +21,13 @@
   display: flex;
   justify-content: center;
   font-family: "Montserrat", sans-serif;
-  font-size: 2vw;
+  font-size: 6vw;
   padding: 4px;
   border-radius: 50px;
   color: white;
+  font-weight: bold;
+  font-family: monospace;
+  padding-bottom: 25px;
 }
 
 @media (max-width: 1000px) {
