@@ -1,9 +1,16 @@
-import React from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from 'react';
+import './content_modal.css';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import './content_modal.css';
+import axios from 'axios';
+import api from '../../pages/Trending/api';
+import { img_500, unavailable, unavailableLandscape, } from "../../confiq/confiq";
+import { Button } from '@material-ui/core';
+import YouTubeIcon from "@material-ui/icons/YouTube";
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -12,16 +19,22 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'center',
     },
     paper: {
-        backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
+        width: "90%",
+        height: "80%",
+        backgroundColor: "#39445a",
+        border: "1px solid #282c34",
+        borderRadius: 10,
+        color: "white",
         boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
+        padding: theme.spacing(1, 1, 3),
     },
 }));
 
-export default function TransitionsModal() {
+export default function ContentModal({ children, media_type, id }) {
     const classes = useStyles();
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
+    const [content, setContent] = useState();
+    const [video, setVideo] = useState();
 
     const handleOpen = () => {
         setOpen(true);
@@ -31,11 +44,32 @@ export default function TransitionsModal() {
         setOpen(false);
     };
 
+    const fetchData = async () => {
+        const { data } = await axios.get(
+            `https://api.themoviedb.org/3/${media_type}/${id}?api_key=${api}&language=en-US`
+        );
+
+        setContent(data);
+    };
+
+    const fetchVideo = async () => {
+        const { data } = await axios.get(
+            `https://api.themoviedb.org/3/${media_type}/${id}/videos?api_key=${api}&language=en-US`
+        );
+
+        setVideo(data.results[0]?.key);
+    };
+
+    useEffect(() => {
+        fetchData();
+        fetchVideo();
+    }, [])
+
     return (
-        <div>
-            <button type="button" onClick={handleOpen}>
-                react-transition-group
-      </button>
+        <>
+            <div type="button" className='media' onClick={handleOpen}>
+                {children}
+            </div>
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
@@ -49,12 +83,68 @@ export default function TransitionsModal() {
                 }}
             >
                 <Fade in={open}>
-                    <div className={classes.paper}>
-                        <h2 id="transition-modal-title">Transition modal</h2>
-                        <p id="transition-modal-description">react-transition-group animates me.</p>
-                    </div>
+                    {
+                        content &&
+                        (
+                            <div className={classes.paper}>
+                                <div className="ContentModal">
+                                    <img
+                                        src={
+                                            content.poster_path
+                                                ? `${img_500}/${content.poster_path}`
+                                                : unavailable
+                                        }
+                                        alt={content.name || content.title}
+                                        className="ContentModal__portrait"
+                                    />
+                                    <img
+                                        src={
+                                            content.backdrop_path
+                                                ? `${img_500}/${content.backdrop_path}`
+                                                : unavailableLandscape
+                                        }
+                                        alt={content.name || content.title}
+                                        className="ContentModal__landscape"
+                                    />
+
+                                    <div className="ContentModal__about">
+                                        <span className="ContentModal__title">
+                                            {content.name || content.title} (
+                                                {(
+                                                content.first_air_date ||
+                                                content.release_date ||
+                                                '🤔'
+                                            ).substring(0, 4)}
+                                            )
+                                        </span>
+                                        {content.tagline && (
+                                            <i className="tagline">{content.tagline}</i>
+                                        )}
+
+                                        <span className="ContentModal__description">
+                                            {content.overview}
+                                        </span>
+
+                                        <div>
+                                            {/* <Carousel id={id} media_type={media_type} /> */}
+                                        </div>
+
+                                        <Button
+                                            variant="contained"
+                                            startIcon={<YouTubeIcon />}
+                                            color="secondary"
+                                            target="__blank"
+                                            href={`https://www.youtube.com/watch?v=${video}`}
+                                        >
+                                            Watch the Trailer
+                                    </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                    }
                 </Fade>
             </Modal>
-        </div>
+        </>
     );
 }
