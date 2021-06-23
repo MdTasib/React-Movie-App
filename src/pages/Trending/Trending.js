@@ -12,6 +12,7 @@ const Trending = () => {
 
     const fetchTrending = async () => {
         const { data } = await axios.get(`https://api.themoviedb.org/3/trending/all/day?api_key=${api}&page=${page}`);
+
         setContent(data.results);
     }
 
@@ -20,7 +21,6 @@ const Trending = () => {
         fetchTrending();
     }, [page])
 
-    console.log(content);
     return (
         <div>
             <span className='pageTitle'>Trending</span>
