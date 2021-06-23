@@ -11,6 +11,7 @@ import api from '../../pages/Trending/api';
 import { img_500, unavailable, unavailableLandscape, } from "../../confiq/confiq";
 import { Button } from '@material-ui/core';
 import YouTubeIcon from "@material-ui/icons/YouTube";
+import Carousel from '../../components/Carousel/Carousel';
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -126,7 +127,7 @@ export default function ContentModal({ children, media_type, id }) {
                                         </span>
 
                                         <div>
-                                            {/* <Carousel id={id} media_type={media_type} /> */}
+                                            <Carousel id={id} media_type={media_type} />
                                         </div>
 
                                         <Button
